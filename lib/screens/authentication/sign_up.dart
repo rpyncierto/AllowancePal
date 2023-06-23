@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'route_transition.dart';
-import 'sign_up.dart';
+import '../route_transition.dart';
+import 'sign_in.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
 
@@ -48,7 +48,7 @@ class _SignInPageState extends State<SignInPage> {
                 // ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 Text(
-                  'AllowancePal',
+                  'Create an Account',
                   style: Theme.of(context).textTheme.headline6?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -56,7 +56,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Track your expenses and manage your finances',
+                  'Sign up to start tracking your money',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -122,20 +122,6 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                         validator: _passwordValidator,
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            // Implement forgot password
-                          },
-                          child: Text(
-                            'Forgot password?',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -143,7 +129,7 @@ class _SignInPageState extends State<SignInPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Perform login
+                      // Perform sign up
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -154,7 +140,7 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   child: Text(
-                    'Log in',
+                    'Sign Up',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -165,22 +151,23 @@ class _SignInPageState extends State<SignInPage> {
                 SizedBox(height: 16),
                 RichText(
                   text: TextSpan(
-                    text: "Don't have an account? ",
+                    text: "Already have an account? ",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Sign up',
+                        text: 'Log in',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {
-                          Navigator.push(context, SlideLeftRoute(page: SignUpPage()));
-                        },
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(context, SlideRightRoute(page: SignInPage()));
+                          },
                       ),
                     ],
                   ),
