@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import '../route_transition.dart';
+import '../tracker/dashboard.dart';
 import 'sign_up.dart';
 
 class SignInPage extends StatefulWidget {
@@ -142,9 +143,11 @@ class _SignInPageState extends State<SignInPage> {
                 SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Perform login
-                    }
+                    Navigator.push(context, SlideLeftRoute(page: DashboardPage()));
+                    // ! uncomment this for validation
+                    // if (_formKey.currentState!.validate()) {
+                    //   Navigator.push(context, SlideLeftRoute(page: DashboardPage()));
+                    // }
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.black,
