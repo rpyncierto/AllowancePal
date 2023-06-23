@@ -42,10 +42,10 @@ class _SignInPageState extends State<SignInPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                Image.asset(
-                  'assets/logo/logo.png',
-                  height: 120,
-                ),
+                // Image.asset(
+                //   'assets/logo/logo.png',
+                //   height: 120,
+                // ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 Text(
                   'AllowancePal',
