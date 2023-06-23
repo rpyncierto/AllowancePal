@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "638359372590",
+    "project_id": "allowancepal-4239e",
+    "storage_bucket": "allowancepal-4239e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638359372590:android:e80d94ed3d3647f333b0bf",
+        "android_client_info": {
+          "package_name": "com.example.allowancepal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "638359372590-ts4b7ksv3l8li53rpq4bjcbtltusnehc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAfF2cJhAowe81Z-xhUKxydLhBTVoRH38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "638359372590-ts4b7ksv3l8li53rpq4bjcbtltusnehc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
