@@ -3,6 +3,7 @@ import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'screens/sign_in.dart';
+import 'screens/sign_up.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/signIn',
       routes: {
         '/signIn': (context) => SignInPage(),
-        // '/signUp': (context) => const SignUp(),
+        '/signUp': (context) => const SignUpPage(),
       },
     );
   }
