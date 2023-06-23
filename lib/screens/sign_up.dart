@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-
+import 'route_transition.dart';
+import 'sign_in.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -165,7 +166,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.pushReplacementNamed(context, '/signIn');
+                            Navigator.push(context, SlideRightRoute(page: SignInPage()));
                           },
                       ),
                     ],
