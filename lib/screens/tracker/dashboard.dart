@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -23,11 +24,20 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<void> _fetchAccountData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      String accountName = prefs.getString('accountName') ?? '';
-      double balance = prefs.getDouble('balance') ?? 0.0;
-      accounts.add(Account(accountName, balance));
-    });
+    String? accountData = prefs.getString('accounts');
+
+    if (accountData != null) {
+      List<dynamic> accountList = json.decode(accountData);
+      setState(() {
+        accounts = accountList.map((item) => Account.fromJson(item)).toList();
+      });
+    }
+  }
+
+  Future<void> _saveAccountData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String accountData = json.encode(accounts);
+    await prefs.setString('accounts', accountData);
   }
 
   @override
@@ -121,37 +131,38 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: accounts.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          accounts[index].name,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: accounts.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        elevation: 2.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            accounts[index].name,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Balance: \$${accounts[index].balance.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16.0,
                           ),
                         ),
-                        subtitle: Text(
-                          'Balance: \$${accounts[index].balance.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16.0,
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ],
             ],
@@ -230,10 +241,8 @@ class _DashboardPageState extends State<DashboardPage> {
           TextButton(
             child: Text('Add'),
             onPressed: () async {
-              // Save the account to local storage
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.setString('accountName', accountName);
-              await prefs.setDouble('balance', balance);
+              accounts.add(Account(accountName, balance));
+              await _saveAccountData(); // Save the updated account data
               _fetchAccountData(); // Fetch updated account data
               Navigator.pop(context);
             },
@@ -249,4 +258,13 @@ class Account {
   final double balance;
 
   Account(this.name, this.balance);
+
+  Account.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        balance = json['balance'];
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'balance': balance,
+      };
 }
