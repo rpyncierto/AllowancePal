@@ -117,11 +117,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         ],
                       ),
                       const SizedBox(height: 8.0),
-                      // LinearProgressIndicator(
-                      //   value: spendableAmount / totalBalance,
-                      //   backgroundColor: Colors.grey[300],
-                      //   valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      // ),
                     ],
                   ),
                 ),
@@ -190,6 +185,50 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
               ],
+              if (_selectedIndex == 2) ...[
+                const SizedBox(height: 16.0),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(
+                        8.0,
+                      ), // Adjust the padding value as needed
+                      // child: ListView.builder(
+                      //   itemCount: transactions.length,
+                      //   itemBuilder: (context, index) {
+                      //     return Card(
+                      //       elevation: 2.0,
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(10.0),
+                      //       ),
+                      //       child: ListTile(
+                      //         title: Text(
+                      //           transactions[index].type,
+                      //           style: TextStyle(
+                      //             fontSize: 18.0,
+                      //             fontWeight: FontWeight.bold,
+                      //           ),
+                      //         ),
+                      //         subtitle: Text(
+                      //           'Amount: \$${transactions[index].amount.toStringAsFixed(2)}',
+                      //           style: TextStyle(
+                      //             fontSize: 16.0,
+                      //             color: Colors.grey[600],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+              ],
             ],
           ),
         ),
@@ -219,7 +258,14 @@ class _DashboardPageState extends State<DashboardPage> {
               },
               child: Icon(Icons.add),
             )
-          : null,
+          : _selectedIndex == 2
+              ? FloatingActionButton(
+                  onPressed: () {
+                    _showAddTransactionDialog();
+                  },
+                  child: Icon(Icons.add),
+                )
+              : null,
     );
   }
 
@@ -319,6 +365,99 @@ class _DashboardPageState extends State<DashboardPage> {
                     .add(Account(accountName, balance, selectedAccountType!));
                 await _saveAccountData(); // Save the updated account data
                 _fetchAccountData(); // Fetch updated account data
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddTransactionDialog() {
+    // Define variables to hold the transaction details
+    String? transactionType;
+    double transactionAmount = 0.0;
+    String transactionDescription = '';
+    String? selectedAccount;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add Transaction'),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(labelText: 'Transaction Type'),
+                  value: transactionType,
+                  onChanged: (value) {
+                    setState(() {
+                      transactionType = value;
+                    });
+                  },
+                  items: <String>[
+                    'Income',
+                    'Expense',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(labelText: 'Account'),
+                  value: selectedAccount,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAccount = value;
+                    });
+                  },
+                  items:
+                      accounts.map<DropdownMenuItem<String>>((Account account) {
+                    return DropdownMenuItem<String>(
+                      value: account.name,
+                      child: Text(account.name),
+                    );
+                  }).toList(),
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: 'Amount'),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      transactionAmount = double.parse(value);
+                    });
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: 'Description'),
+                  onChanged: (value) {
+                    setState(() {
+                      transactionDescription = value;
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+        actions: [
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text('Add'),
+            onPressed: () {
+              if (transactionType != null && selectedAccount != null) {
+              
+
                 Navigator.pop(context);
               }
             },
