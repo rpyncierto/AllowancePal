@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
+  @override
+  _DashboardPageState createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  int _selectedIndex = 2; // Index of the selected tab
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +75,7 @@ class DashboardPage extends StatelessWidget {
                       LinearProgressIndicator(
                         value: 0.7, // Adjust the value as needed
                         backgroundColor: Colors.grey[300],
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                       ),
                     ],
                   ),
@@ -78,6 +85,30 @@ class DashboardPage extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onTabTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Analytics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance),
+            label: 'Accounts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Transactions',
+          ),
+        ],
+      ),
     );
+  }
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
