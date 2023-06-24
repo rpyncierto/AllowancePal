@@ -12,9 +12,8 @@ class _DashboardPageState extends State<DashboardPage> {
   List<String> tabNames = ['Analytics', 'Accounts', 'Transactions'];
   List<Account> accounts = [];
 
-  String accountName = ''; 
-  double balance = 0.0; 
-
+  String accountName = '';
+  double balance = 0.0;
 
   @override
   void initState() {
@@ -121,13 +120,36 @@ class _DashboardPageState extends State<DashboardPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(height: 8.0),
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: accounts.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(accounts[index].name),
-                      subtitle: Text('Balance: \$${accounts[index].balance.toStringAsFixed(2)}'),
+                    return Card(
+                      elevation: 2.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          accounts[index].name,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Balance: \$${accounts[index].balance.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16.0,
+                        ),
+                      ),
                     );
                   },
                 ),
