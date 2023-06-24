@@ -13,87 +13,68 @@ class DashboardPage extends StatelessWidget {
               const SizedBox(height: 8.0),
               Card(
                 elevation: 2.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                        child: Text(
-                          'BALANCE',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
+                      Text(
+                        'BALANCE',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      Center(
-                        child: Text(
-                          '\$1,500',
-                          style: TextStyle(
-                            fontSize: 50.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Text(
+                        '\$1,500',
+                        style: TextStyle(
+                          fontSize: 50.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 16.0),
+                      const SizedBox(height: 24.0),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              'Spendable',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              '\$2,000', // Replace with the actual expense limit value
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 8.0),
-                      AccountBreakdownCard(
-                        account: 'Account 1',
-                        currentBalance: '\$800',
-                      ),
-                      AccountBreakdownCard(
-                        account: 'Account 2',
-                        currentBalance: '\$500',
-                      ),
-                      AccountBreakdownCard(
-                        account: 'Account 3',
-                        currentBalance: '\$200',
-                      ),
-                      AccountBreakdownCard(
-                        account: 'Account 4',
-                        currentBalance: '\$300',
+                      LinearProgressIndicator(
+                        value: 0.7, // Adjust the value as needed
+                        backgroundColor: Colors.grey[300],
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                       ),
                     ],
                   ),
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AccountBreakdownCard extends StatelessWidget {
-  final String account;
-  final String currentBalance;
-
-  const AccountBreakdownCard({
-    required this.account,
-    required this.currentBalance,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2.0,
-      child: ListTile(
-        title: Text(
-          account,
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        trailing: Text(
-          currentBalance,
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
           ),
         ),
       ),
