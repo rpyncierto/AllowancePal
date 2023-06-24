@@ -42,6 +42,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    double totalBalance = 0.0;
+    for (var account in accounts) {
+      totalBalance += account.balance;
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -70,7 +75,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       const SizedBox(height: 16.0),
                       Text(
-                        '\$1,500',
+                        '\$${totalBalance.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 50.0,
                           fontWeight: FontWeight.bold,
