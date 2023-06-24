@@ -155,9 +155,11 @@ class _DashboardPageState extends State<DashboardPage> {
                               color: Colors.grey[600],
                             ),
                           ),
-                          trailing: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16.0,
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              _deleteAccount(index);
+                            },
                           ),
                         ),
                       );
@@ -197,6 +199,15 @@ class _DashboardPageState extends State<DashboardPage> {
           : null,
     );
   }
+
+  void _deleteAccount(int index) async {
+  setState(() {
+    accounts.removeAt(index);
+  });
+  await _saveAccountData(); // Save the updated account data
+  _fetchAccountData(); // Fetch updated account data
+}
+
 
   void _onTabTapped(int index) {
     setState(() {
