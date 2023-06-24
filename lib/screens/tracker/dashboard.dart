@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import 'account.dart';
+
 class DashboardPage extends StatefulWidget {
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -140,13 +142,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 const SizedBox(height: 8.0),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(
+                  child: Padding(
+                      padding: const EdgeInsets.all(
                           8.0), // Adjust the padding value as needed
                       child: ListView.builder(
                         itemCount: accounts.length,
@@ -159,7 +156,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             child: ListTile(
                               title: Text(
                                 accounts[index].name,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -183,49 +180,16 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ),
                   ),
-                ),
+                
               ],
               if (_selectedIndex == 2) ...[
                 const SizedBox(height: 16.0),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Padding(
+                const Expanded(
+                  child:  Padding(
                       padding: EdgeInsets.all(
                         8.0,
-                      ), // Adjust the padding value as needed
-                      // child: ListView.builder(
-                      //   itemCount: transactions.length,
-                      //   itemBuilder: (context, index) {
-                      //     return Card(
-                      //       elevation: 2.0,
-                      //       shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(10.0),
-                      //       ),
-                      //       child: ListTile(
-                      //         title: Text(
-                      //           transactions[index].type,
-                      //           style: TextStyle(
-                      //             fontSize: 18.0,
-                      //             fontWeight: FontWeight.bold,
-                      //           ),
-                      //         ),
-                      //         subtitle: Text(
-                      //           'Amount: \$${transactions[index].amount.toStringAsFixed(2)}',
-                      //           style: TextStyle(
-                      //             fontSize: 16.0,
-                      //             color: Colors.grey[600],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
+                      ), 
                     ),
-                  ),
                 ),
                 const SizedBox(height: 16.0),
               ],
@@ -236,7 +200,7 @@ class _DashboardPageState extends State<DashboardPage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onTabTapped,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.analytics),
             label: 'Analytics',
@@ -256,14 +220,14 @@ class _DashboardPageState extends State<DashboardPage> {
               onPressed: () {
                 _showAddAccountDialog();
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             )
           : _selectedIndex == 2
               ? FloatingActionButton(
                   onPressed: () {
                     _showAddTransactionDialog();
                   },
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 )
               : null,
     );
@@ -290,14 +254,14 @@ class _DashboardPageState extends State<DashboardPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Account'),
+        title: const Text('Add Account'),
         content: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
-                  decoration: InputDecoration(labelText: 'Account Name'),
+                  decoration: const InputDecoration(labelText: 'Account Name'),
                   onChanged: (value) {
                     setState(() {
                       accountName = value;
@@ -305,7 +269,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   },
                 ),
                 TextField(
-                  decoration: InputDecoration(labelText: 'Balance'),
+                  decoration: const InputDecoration(labelText: 'Balance'),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     setState(() {
@@ -313,17 +277,17 @@ class _DashboardPageState extends State<DashboardPage> {
                     });
                   },
                 ),
-                SizedBox(height: 25.0),
-                Text(
+                const SizedBox(height: 25.0),
+                const Text(
                   'Account Type:',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 ListTile(
-                  title: Text('Spendable'),
+                  title: const Text('Spendable'),
                   leading: Radio<String>(
                     value: 'Spendable',
                     groupValue: selectedAccountType,
@@ -335,7 +299,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
                 ListTile(
-                  title: Text('Savings'),
+                  title: const Text('Savings'),
                   leading: Radio<String>(
                     value: 'Savings',
                     groupValue: selectedAccountType,
@@ -352,13 +316,13 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         actions: [
           TextButton(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           TextButton(
-            child: Text('Add'),
+            child: const Text('Add'),
             onPressed: () async {
               if (selectedAccountType != null) {
                 accounts
@@ -374,125 +338,104 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-void _showAddTransactionDialog() {
-  // Define variables to hold the transaction details
-  String? transactionType;
-  double transactionAmount = 0.0;
-  String transactionDescription = '';
-  Account? selectedAccount;
+  void _showAddTransactionDialog() {
+    // Define variables to hold the transaction details
+    String? transactionType;
+    double transactionAmount = 0.0;
+    Account? selectedAccount;
 
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Add Transaction'),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'Transaction Type'),
-                value: transactionType,
-                onChanged: (value) {
-                  setState(() {
-                    transactionType = value;
-                  });
-                },
-                items: <String>[
-                  'Income',
-                  'Expense',
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              DropdownButtonFormField<Account>(
-                decoration: InputDecoration(labelText: 'Account'),
-                value: selectedAccount,
-                onChanged: (value) {
-                  setState(() {
-                    selectedAccount = value;
-                  });
-                },
-                items: accounts.map<DropdownMenuItem<Account>>((Account account) {
-                  return DropdownMenuItem<Account>(
-                    value: account,
-                    child: Text(account.name),
-                  );
-                }).toList(),
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Amount'),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  setState(() {
-                    transactionAmount = double.parse(value);
-                  });
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Description'),
-                onChanged: (value) {
-                  setState(() {
-                    transactionDescription = value;
-                  });
-                },
-              ),
-            ],
-          );
-        },
-      ),
-      actions: [
-        TextButton(
-          child: Text('Cancel'),
-          onPressed: () {
-            Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Transaction'),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(labelText: 'Transaction Type'),
+                  value: transactionType,
+                  onChanged: (value) {
+                    setState(() {
+                      transactionType = value;
+                    });
+                  },
+                  items: <String>[
+                    'Income',
+                    'Expense',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                DropdownButtonFormField<Account>(
+                  decoration: const InputDecoration(labelText: 'Account'),
+                  value: selectedAccount,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAccount = value;
+                    });
+                  },
+                  items: accounts
+                      .map<DropdownMenuItem<Account>>((Account account) {
+                    return DropdownMenuItem<Account>(
+                      value: account,
+                      child: Text(account.name),
+                    );
+                  }).toList(),
+                ),
+                TextField(
+                  decoration: const InputDecoration(labelText: 'Amount'),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      transactionAmount = double.parse(value);
+                    });
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: 'Description'),
+                  onChanged: (value) {
+                    setState(() {
+                    });
+                  },
+                ),
+              ],
+            );
           },
         ),
-        TextButton(
-          child: Text('Add'),
-          onPressed: () {
-            if (transactionType != null && selectedAccount != null) {
-              // Update the account balance based on the transaction type, amount, and description
-              if (transactionType == 'Income') {
-                selectedAccount!.balance += transactionAmount;
-              } else if (transactionType == 'Expense') {
-                selectedAccount!.balance -= transactionAmount;
-              }
-              
-              // Save the updated account data
-              _saveAccountData();
-              // Fetch the updated account data
-              _fetchAccountData();
-              
+        actions: [
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
               Navigator.pop(context);
-            }
-          },
-        ),
-      ],
-    ),
-  );
-}
+            },
+          ),
+          TextButton(
+            child: Text('Add'),
+            onPressed: () {
+              if (transactionType != null && selectedAccount != null) {
+                // Update the account balance based on the transaction type, amount, and description
+                if (transactionType == 'Income') {
+                  selectedAccount!.balance += transactionAmount;
+                } else if (transactionType == 'Expense') {
+                  selectedAccount!.balance -= transactionAmount;
+                }
 
-}
+                // Save the updated account data
+                _saveAccountData();
+                // Fetch the updated account data
+                _fetchAccountData();
 
-class Account {
-  final String name;
-  double balance;
-  final String type;
-
-  Account(this.name, this.balance, this.type);
-
-  Account.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        balance = json['balance'],
-        type = json['type'];
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'balance': balance,
-        'type': type,
-      };
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
