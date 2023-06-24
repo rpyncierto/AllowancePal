@@ -47,6 +47,13 @@ class _DashboardPageState extends State<DashboardPage> {
       totalBalance += account.balance;
     }
 
+    double spendableAmount = 0.0;
+    for (var account in accounts) {
+      if (account.type == 'Spendable') {
+        spendableAmount += account.balance * 0.7;
+      }
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -98,7 +105,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           Expanded(
                             flex: 3,
                             child: Text(
-                              '\$2,000', // Replace with the actual expense limit value
+                             '\$${spendableAmount.toStringAsFixed(2)}', 
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
