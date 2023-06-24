@@ -1,10 +1,9 @@
 import 'account.dart';
-
 class Transaction {
-  final double amount;
-  final String transactionType;
-  final Account account;
-  final String description;
+  double amount;
+  String transactionType;
+  Account account;
+  String description;
 
   Transaction({
     required this.amount,
@@ -12,6 +11,15 @@ class Transaction {
     required this.account,
     required this.description,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'amount': amount,
+      'transactionType': transactionType,
+      'account': account.toJson(),
+      'description': description,
+    };
+  }
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(

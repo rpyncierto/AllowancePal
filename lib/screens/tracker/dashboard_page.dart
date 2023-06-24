@@ -217,28 +217,40 @@ class _DashboardPageState extends State<DashboardPage> {
                 const SizedBox(height: 8.0),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      elevation: 2.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          'Total Transactions',
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                    padding: const EdgeInsets.all(
+                        8.0), // Adjust the padding value as needed
+                    child: ListView.builder(
+                      itemCount: transactions.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 2.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                        ),
-                        subtitle: Text(
-                          'Count: ${transactions.length}',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.grey[600],
+                          child: ListTile(
+                            title: Text(
+                              transactions[index].description,
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Amount: \$${transactions[index].amount.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _deleteAccount(index);
+                              },
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -484,10 +496,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     account: selectedAccount!,
                     description: transactionDescription));
 
-                // Save the updated account data
+                // Save the updated account and transaction data
                 _saveAccountData();
-                // Fetch the updated account data
+                _saveTransactionData();
+
+                // Fetch the updated account and transaction data
                 _fetchAccountData();
+                _fetchTransactionData();
 
                 Navigator.pop(context);
               }
