@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -7,6 +8,28 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 2; // Index of the selected tab
+
+  List<String> tabNames = ['Analytics', 'Accounts', 'Transactions'];
+  List<Account> accounts = [];
+
+  String accountName = ''; 
+  double balance = 0.0; 
+
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAccountData();
+  }
+
+  Future<void> _fetchAccountData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      String accountName = prefs.getString('accountName') ?? '';
+      double balance = prefs.getDouble('balance') ?? 0.0;
+      accounts.add(Account(accountName, balance));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +104,34 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16.0),
+              Text(
+                'Selected Tab: ${tabNames[_selectedIndex]}',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (_selectedIndex == 1) ...[
+                const SizedBox(height: 16.0),
+                Text(
+                  'Accounts:',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: accounts.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(accounts[index].name),
+                      subtitle: Text('Balance: \$${accounts[index].balance.toStringAsFixed(2)}'),
+                    );
+                  },
+                ),
+              ],
             ],
           ),
         ),
@@ -103,6 +154,14 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton(
+              onPressed: () {
+                _showAddAccountDialog();
+              },
+              child: Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -111,4 +170,61 @@ class _DashboardPageState extends State<DashboardPage> {
       _selectedIndex = index;
     });
   }
+
+  void _showAddAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add Account'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: 'Account Name'),
+              onChanged: (value) {
+                setState(() {
+                  accountName = value;
+                });
+              },
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Balance'),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  balance = double.parse(value);
+                });
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text('Add'),
+            onPressed: () async {
+              // Save the account to local storage
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.setString('accountName', accountName);
+              await prefs.setDouble('balance', balance);
+              _fetchAccountData(); // Fetch updated account data
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Account {
+  final String name;
+  final double balance;
+
+  Account(this.name, this.balance);
 }
