@@ -374,103 +374,113 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  void _showAddTransactionDialog() {
-    // Define variables to hold the transaction details
-    String? transactionType;
-    double transactionAmount = 0.0;
-    String transactionDescription = '';
-    String? selectedAccount;
+void _showAddTransactionDialog() {
+  // Define variables to hold the transaction details
+  String? transactionType;
+  double transactionAmount = 0.0;
+  String transactionDescription = '';
+  Account? selectedAccount;
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Add Transaction'),
-        content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: 'Transaction Type'),
-                  value: transactionType,
-                  onChanged: (value) {
-                    setState(() {
-                      transactionType = value;
-                    });
-                  },
-                  items: <String>[
-                    'Income',
-                    'Expense',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: 'Account'),
-                  value: selectedAccount,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAccount = value;
-                    });
-                  },
-                  items:
-                      accounts.map<DropdownMenuItem<String>>((Account account) {
-                    return DropdownMenuItem<String>(
-                      value: account.name,
-                      child: Text(account.name),
-                    );
-                  }).toList(),
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Amount'),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      transactionAmount = double.parse(value);
-                    });
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Description'),
-                  onChanged: (value) {
-                    setState(() {
-                      transactionDescription = value;
-                    });
-                  },
-                ),
-              ],
-            );
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Add Transaction'),
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(labelText: 'Transaction Type'),
+                value: transactionType,
+                onChanged: (value) {
+                  setState(() {
+                    transactionType = value;
+                  });
+                },
+                items: <String>[
+                  'Income',
+                  'Expense',
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              DropdownButtonFormField<Account>(
+                decoration: InputDecoration(labelText: 'Account'),
+                value: selectedAccount,
+                onChanged: (value) {
+                  setState(() {
+                    selectedAccount = value;
+                  });
+                },
+                items: accounts.map<DropdownMenuItem<Account>>((Account account) {
+                  return DropdownMenuItem<Account>(
+                    value: account,
+                    child: Text(account.name),
+                  );
+                }).toList(),
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  setState(() {
+                    transactionAmount = double.parse(value);
+                  });
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Description'),
+                onChanged: (value) {
+                  setState(() {
+                    transactionDescription = value;
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
-        actions: [
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          TextButton(
-            child: Text('Add'),
-            onPressed: () {
-              if (transactionType != null && selectedAccount != null) {
-              
-
-                Navigator.pop(context);
+        TextButton(
+          child: Text('Add'),
+          onPressed: () {
+            if (transactionType != null && selectedAccount != null) {
+              // Update the account balance based on the transaction type, amount, and description
+              if (transactionType == 'Income') {
+                selectedAccount!.balance += transactionAmount;
+              } else if (transactionType == 'Expense') {
+                selectedAccount!.balance -= transactionAmount;
               }
-            },
-          ),
-        ],
-      ),
-    );
-  }
+              
+              // Save the updated account data
+              _saveAccountData();
+              // Fetch the updated account data
+              _fetchAccountData();
+              
+              Navigator.pop(context);
+            }
+          },
+        ),
+      ],
+    ),
+  );
+}
+
 }
 
 class Account {
   final String name;
-  final double balance;
+  double balance;
   final String type;
 
   Account(this.name, this.balance, this.type);
