@@ -15,6 +15,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   String accountName = '';
   double balance = 0.0;
+  String accountType = '';
 
   @override
   void initState() {
@@ -48,9 +49,9 @@ class _DashboardPageState extends State<DashboardPage> {
     }
 
     double spendableAmount = 0.0;
-    for (var account in accounts) {
-      if (account.type == 'Spendable') {
-        spendableAmount += account.balance * 0.7;
+      for (var account in accounts) {
+        if (account.type == 'Spendable') {
+        spendableAmount += (account.balance * 0.7);
       }
     }
 
@@ -105,7 +106,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           Expanded(
                             flex: 3,
                             child: Text(
-                             '\$${spendableAmount.toStringAsFixed(2)}', 
+                              '\$${spendableAmount.toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
@@ -116,11 +117,11 @@ class _DashboardPageState extends State<DashboardPage> {
                         ],
                       ),
                       const SizedBox(height: 8.0),
-                      LinearProgressIndicator(
-                        value: 0.7, // Adjust the value as needed
-                        backgroundColor: Colors.grey[300],
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
+                      // LinearProgressIndicator(
+                      //   value: spendableAmount / totalBalance,
+                      //   backgroundColor: Colors.grey[300],
+                      //   valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      // ),
                     ],
                   ),
                 ),
@@ -213,13 +214,12 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _deleteAccount(int index) async {
-  setState(() {
-    accounts.removeAt(index);
-  });
-  await _saveAccountData(); // Save the updated account data
-  _fetchAccountData(); // Fetch updated account data
-}
-
+    setState(() {
+      accounts.removeAt(index);
+    });
+    await _saveAccountData(); // Save the updated account data
+    _fetchAccountData(); // Fetch updated account data
+  }
 
   void _onTabTapped(int index) {
     setState(() {
@@ -227,67 +227,113 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
-  void _showAddAccountDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Add Account'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Account Name'),
-              onChanged: (value) {
-                setState(() {
-                  accountName = value;
-                });
-              },
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Balance'),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  balance = double.parse(value);
-                });
-              },
-            ),
-          ],
+ void _showAddAccountDialog() {
+  // Define variables to hold the selected value
+  String? selectedAccountType;
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Add Account'),
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Account Name'),
+                onChanged: (value) {
+                  setState(() {
+                    accountName = value;
+                  });
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Balance'),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  setState(() {
+                    balance = double.parse(value);
+                  });
+                },
+              ),
+              SizedBox(height: 25.0),
+              Text(
+                'Account Type:',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ListTile(
+                title: Text('Spendable'),
+                leading: Radio<String>(
+                  value: 'Spendable',
+                  groupValue: selectedAccountType,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAccountType = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: Text('Savings'),
+                leading: Radio<String>(
+                  value: 'Savings',
+                  groupValue: selectedAccountType,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAccountType = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        actions: [
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          TextButton(
-            child: Text('Add'),
-            onPressed: () async {
-              accounts.add(Account(accountName, balance));
+        TextButton(
+          child: Text('Add'),
+          onPressed: () async {
+            if (selectedAccountType != null) {
+              accounts.add(Account(accountName, balance, selectedAccountType!));
               await _saveAccountData(); // Save the updated account data
               _fetchAccountData(); // Fetch updated account data
               Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
+            }
+          },
+        ),
+      ],
+    ),
+  );
+}
+
 }
 
 class Account {
   final String name;
   final double balance;
+  final String type;
 
-  Account(this.name, this.balance);
+  Account(this.name, this.balance, this.type);
 
   Account.fromJson(Map<String, dynamic> json)
       : name = json['name'],
-        balance = json['balance'];
+        balance = json['balance'],
+        type = json['type'];
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'balance': balance,
+        'type': type,
       };
 }
