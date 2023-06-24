@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'account.dart';
+import 'transaction.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   List<String> tabNames = ['Analytics', 'Accounts', 'Transactions'];
   List<Account> accounts = [];
+  List<Transaction> transactions = [];
 
   String accountName = '';
   double balance = 0.0;
@@ -23,6 +25,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     _fetchAccountData();
+    _fetchTransactionData();
   }
 
   Future<void> _fetchAccountData() async {
@@ -37,10 +40,31 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+  Future<void> _fetchTransactionData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? transactionData = prefs.getString('transactions');
+
+    if (transactionData != null) {
+      List<dynamic> transactionList = json.decode(transactionData);
+      setState(() {
+        transactions = transactionList
+            .map((item) => Transaction.fromJson(item as Map<String, dynamic>)
+                as Transaction)
+            .toList();
+      });
+    }
+  }
+
   Future<void> _saveAccountData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String accountData = json.encode(accounts);
     await prefs.setString('accounts', accountData);
+  }
+
+  Future<void> _saveTransactionData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String transactionData = json.encode(transactions);
+    await prefs.setString('transactions', transactionData);
   }
 
   @override
@@ -143,55 +167,81 @@ class _DashboardPageState extends State<DashboardPage> {
                 const SizedBox(height: 8.0),
                 Expanded(
                   child: Padding(
-                      padding: const EdgeInsets.all(
-                          8.0), // Adjust the padding value as needed
-                      child: ListView.builder(
-                        itemCount: accounts.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: ListTile(
-                              title: Text(
-                                accounts[index].name,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                'Balance: \$${accounts[index].balance.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  _deleteAccount(index);
-                                },
+                    padding: const EdgeInsets.all(
+                        8.0), // Adjust the padding value as needed
+                    child: ListView.builder(
+                      itemCount: accounts.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 2.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              accounts[index].name,
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          );
-                        },
-                      ),
+                            subtitle: Text(
+                              'Balance: \$${accounts[index].balance.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _deleteAccount(index);
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
-                
+                ),
               ],
               if (_selectedIndex == 2) ...[
                 const SizedBox(height: 16.0),
-                const Expanded(
-                  child:  Padding(
-                      padding: EdgeInsets.all(
-                        8.0,
-                      ), 
-                    ),
+                Text(
+                  'Transactions:',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 8.0),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 2.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          'Total Transactions',
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Count: ${transactions.length}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ],
           ),
@@ -343,6 +393,7 @@ class _DashboardPageState extends State<DashboardPage> {
     String? transactionType;
     double transactionAmount = 0.0;
     Account? selectedAccount;
+    String transactionDescription = '';
 
     showDialog(
       context: context,
@@ -354,7 +405,8 @@ class _DashboardPageState extends State<DashboardPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: 'Transaction Type'),
+                  decoration:
+                      const InputDecoration(labelText: 'Transaction Type'),
                   value: transactionType,
                   onChanged: (value) {
                     setState(() {
@@ -400,6 +452,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   decoration: InputDecoration(labelText: 'Description'),
                   onChanged: (value) {
                     setState(() {
+                      transactionDescription = value;
                     });
                   },
                 ),
@@ -424,6 +477,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 } else if (transactionType == 'Expense') {
                   selectedAccount!.balance -= transactionAmount;
                 }
+
+                transactions.add(Transaction(
+                    amount: transactionAmount,
+                    transactionType: transactionType!,
+                    account: selectedAccount!,
+                    description: transactionDescription));
 
                 // Save the updated account data
                 _saveAccountData();

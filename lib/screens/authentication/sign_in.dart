@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import '../route_transition.dart';
-import '../tracker/dashboard.dart';
+import '../tracker/dashboard_page.dart';
 import 'sign_up.dart';
 
 class SignInPage extends StatefulWidget {
