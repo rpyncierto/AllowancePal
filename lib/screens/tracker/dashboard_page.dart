@@ -55,6 +55,9 @@ class _DashboardPageState extends State<DashboardPage> {
             .map((item) => Transaction.fromJson(item as Map<String, dynamic>)
                 as Transaction)
             .toList();
+        inflow = 0.0;
+        outflow = 0.0;
+
         for (var transaction in transactions) {
         if (transaction.transactionType == "Income") {
           inflow += transaction.amount;
