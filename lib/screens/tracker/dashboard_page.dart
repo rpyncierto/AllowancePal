@@ -247,13 +247,6 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
 
               const SizedBox(height: 16.0),
-              Text(
-                'Selected Tab: ${tabNames[_selectedIndex]}',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               if (_selectedIndex == 0) ...[
                 const SizedBox(height: 16.0),
                 Text(
@@ -354,40 +347,6 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
               ],
-              // if (_selectedIndex == 0) ...[
-              //   const SizedBox(height: 16.0),
-              //   Text(
-              //     'Analytics:',
-              //     style: TextStyle(
-              //       fontSize: 18.0,
-              //       fontWeight: FontWeight.bold,
-              //     ),
-              //   ),
-              //   const SizedBox(height: 8.0),
-              //   Card(
-              //     elevation: 2.0,
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(10.0),
-              //     ),
-              //     child: Padding(
-              //       padding: const EdgeInsets.all(16.0),
-              //       child: Column(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         children: [
-              //           Text(
-              //             'Expense vs. Income',
-              //             style: TextStyle(
-              //               fontSize: 18.0,
-              //               fontWeight: FontWeight.bold,
-              //             ),
-              //           ),
-              //           const SizedBox(height: 16.0),
-              //           // _buildExpenseIncomeChart(),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ],
             ],
           ),
         ),
