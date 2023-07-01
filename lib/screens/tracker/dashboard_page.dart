@@ -11,9 +11,9 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  int _selectedIndex = 2; // Index of the selected tab
+  int _selectedIndex = 0; // Index of the selected tab
 
-  List<String> tabNames = ['Analytics', 'Accounts', 'Transactions'];
+  List<String> tabNames = ['Accounts', 'Transactions'];
   List<Account> accounts = [];
   List<Transaction> transactions = [];
 
@@ -248,7 +248,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              if (_selectedIndex == 1) ...[
+              if (_selectedIndex == 0) ...[
                 const SizedBox(height: 16.0),
                 Text(
                   'Accounts:',
@@ -298,7 +298,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
               ],
-              if (_selectedIndex == 2) ...[
+              if (_selectedIndex == 1) ...[
                 const SizedBox(height: 16.0),
                 Text(
                   'Transactions:',
@@ -348,40 +348,40 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
               ],
-              if (_selectedIndex == 0) ...[
-                const SizedBox(height: 16.0),
-                Text(
-                  'Analytics:',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-                Card(
-                  elevation: 2.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Expense vs. Income',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        // _buildExpenseIncomeChart(),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+              // if (_selectedIndex == 0) ...[
+              //   const SizedBox(height: 16.0),
+              //   Text(
+              //     'Analytics:',
+              //     style: TextStyle(
+              //       fontSize: 18.0,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              //   const SizedBox(height: 8.0),
+              //   Card(
+              //     elevation: 2.0,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(10.0),
+              //     ),
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(16.0),
+              //       child: Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text(
+              //             'Expense vs. Income',
+              //             style: TextStyle(
+              //               fontSize: 18.0,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),
+              //           const SizedBox(height: 16.0),
+              //           // _buildExpenseIncomeChart(),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ],
             ],
           ),
         ),
@@ -390,10 +390,10 @@ class _DashboardPageState extends State<DashboardPage> {
         currentIndex: _selectedIndex,
         onTap: _onTabTapped,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Analytics',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.analytics),
+          //   label: 'Analytics',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_balance),
             label: 'Accounts',
