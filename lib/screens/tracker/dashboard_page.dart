@@ -15,11 +15,14 @@ class _DashboardPageState extends State<DashboardPage> {
 
   List<String> tabNames = ['Accounts', 'Transactions'];
   List<Account> accounts = [];
+  List<Account> spendableAccounts = []; // List to hold spendable accounts
   List<Transaction> transactions = [];
 
   String accountName = '';
   double balance = 0.0;
   String accountType = '';
+  double inflow = 0.0;
+  double outflow = 0.0;
 
   @override
   void initState() {
@@ -36,6 +39,7 @@ class _DashboardPageState extends State<DashboardPage> {
       List<dynamic> accountList = json.decode(accountData);
       setState(() {
         accounts = accountList.map((item) => Account.fromJson(item)).toList();
+        spendableAccounts = accounts.where((account) => account.type == 'Spendable').toList();
       });
     }
   }
@@ -51,6 +55,13 @@ class _DashboardPageState extends State<DashboardPage> {
             .map((item) => Transaction.fromJson(item as Map<String, dynamic>)
                 as Transaction)
             .toList();
+        for (var transaction in transactions) {
+        if (transaction.transactionType == "Income") {
+          inflow += transaction.amount;
+        } else {
+          outflow += transaction.amount;
+        }
+      }
       });
     }
   }
@@ -178,7 +189,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        '\$${0.toStringAsFixed(2)}',
+                                        '\$${inflow.toStringAsFixed(2)}',
                                         style: TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.bold,
@@ -222,7 +233,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       ),
                                       const SizedBox(height: 8.0),
                                       Text(
-                                        '\$${0.toStringAsFixed(2)}',
+                                        '\$${outflow.toStringAsFixed(2)}',
                                         style: TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.bold,
