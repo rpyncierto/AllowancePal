@@ -369,14 +369,14 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-      floatingActionButton: _selectedIndex == 1
+      floatingActionButton: _selectedIndex == 0
           ? FloatingActionButton(
               onPressed: () {
                 _showAddAccountDialog();
               },
               child: const Icon(Icons.add),
             )
-          : _selectedIndex == 2
+          : _selectedIndex == 1
               ? FloatingActionButton(
                   onPressed: () {
                     _showAddTransactionDialog();
